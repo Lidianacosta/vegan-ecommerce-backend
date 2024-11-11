@@ -1,0 +1,21 @@
+{
+    "files.autoSave": "off",
+    "explorer.compactFolders": false,
+    "editor.renderWhitespace": "all",
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "[python]": {
+        "diffEditor.ignoreTrimWhitespace": false,
+        "editor.rulers": [79],
+        "editor.formatOnSave": true,
+    },
+
+    "python.testing.pytestArgs": [
+        "vegan_ecommerce"
+    ],
+
+    // idx
+    "IDX.aI.enableInlineCompletion": false,
+    "IDX.aI.enableCodebaseIndexing": false,
+
+}

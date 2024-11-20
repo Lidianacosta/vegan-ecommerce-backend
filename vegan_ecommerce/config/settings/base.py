@@ -30,7 +30,9 @@ THIRD_PARTY_APPS = [
     'rest_framework_simplejwt',
 ]
 
-LOCAL_APPS = []
+LOCAL_APPS = [
+    "apps.users",
+]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -46,7 +48,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 
-# AUTH_USER_MODEL
+AUTH_USER_MODEL = "users.User"
 
 TEMPLATES = [
     {

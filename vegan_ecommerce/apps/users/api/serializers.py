@@ -86,6 +86,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
                 "access": "string",
                 "refresh": "string",
                 'full_name': 'Anna Smith',
+                'email': 'user@exemple.com',
                 'cpf': '328.315.830-47',
                 'date_of_birth': '01/01/2001',
                 'phone_number': '11988888888'
@@ -100,6 +101,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
         token['full_name'] = user.full_name
+        token['email'] = user.email
         token['cpf'] = user.cpf
         token['date_of_birth'] = user.date_of_birth
         token['phone_number'] = user.phone_number

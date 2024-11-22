@@ -28,6 +28,7 @@ THIRD_PARTY_APPS = [
     'drf_spectacular',
     'rest_framework',
     'rest_framework_simplejwt',
+    'djoser',
 ]
 
 LOCAL_APPS = [
@@ -154,6 +155,7 @@ REST_FRAMEWORK = {
 
 
 SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('JWT',),
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": False,
@@ -166,4 +168,14 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'Vegano Naturais was founded in 2024 with the aim of offering delicious and accessible vegan food for everyone. We started our journey with a small selection of products, and today we are proud to be a reference in the vegan food market, with a wide range of options that satisfy all tastes.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+}
+
+# djoser
+DJOSER = {
+    'SERIALIZERS': {
+        'user': 'users.api.serializers.UserSerializer',
+        'user_create': 'users.api.serializers.UserCreateSerializer',
+        'current_user': 'users.api.serializers.UserSerializer',
+        'user_delete': 'users.api.serializers.UserSerializer'
+    }
 }

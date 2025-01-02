@@ -7,7 +7,8 @@ class Category(models.Model):
     id = models.UUIDField(
         _('id'),
         default=uuid.uuid4,
-        primary_key=True
+        primary_key=True,
+        editable=False
     )
     name = models.CharField(
         _('name'),

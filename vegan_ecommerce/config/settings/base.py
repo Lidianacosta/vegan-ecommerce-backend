@@ -161,7 +161,7 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": True,
-    "TOKEN_OBTAIN_SERIALIZER": "users.api.serializers.CustomTokenObtainPairSerializer"
+    "TOKEN_OBTAIN_SERIALIZER": "apps.users.api.serializers.CustomTokenObtainPairSerializer"
 }
 
 SPECTACULAR_SETTINGS = {
@@ -174,9 +174,9 @@ SPECTACULAR_SETTINGS = {
 # djoser
 DJOSER = {
     'SERIALIZERS': {
-        'user': 'users.api.serializers.UserSerializer',
-        'user_create': 'users.api.serializers.UserCreateSerializer',
-        'current_user': 'users.api.serializers.UserSerializer',
-        'user_delete': 'users.api.serializers.UserSerializer'
+        'user': 'apps.users.api.serializers.UserSerializer',
+        'user_create': 'apps.users.api.serializers.UserCreateSerializer',
+        'current_user': 'apps.users.api.serializers.UserSerializer',
+        'user_delete': 'apps.users.api.serializers.UserSerializer'
     }
 }

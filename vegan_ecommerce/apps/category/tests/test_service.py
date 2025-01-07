@@ -19,19 +19,19 @@ class CategoryServiceTestCase(TestCase):
     def test_create_instance_by_CategoryService_is_success(self):
         category_instance = CategoryService.create_instance(
             **tests_datas.get_category_data(name="Test create category",
-                                            slug="Test create category"))
+                                            description="Test create category"))
 
         self.assertIsInstance(category_instance, Category)
 
     def test_create_instance_by_CategoryService_is_correct_data(self):
         category_name = "Test create category"
-        category_slug = "Test create category"
+        category_description = "Test create category"
         category = CategoryService.create_instance(
             **tests_datas.get_category_data(name=category_name,
-                                            slug=category_slug))
+                                            description=category_description))
 
         self.assertEqual(category.name, category_name)
-        self.assertEqual(category.slug, category_slug)
+        self.assertEqual(category.description, category_description)
 
     def test_retrieve_instance_by_Category_Service_is_success(self):
         category_recovered = CategoryService.retrieve_instance(
@@ -42,7 +42,6 @@ class CategoryServiceTestCase(TestCase):
     def test_update_instance_by_CategoryService_is_success(self):
         category_data = tests_datas.get_category_data(
             name='Test upadate name category',
-            slug='Test update slug category',
             description='Test update description'
         )
         category = CategoryService.update_instance(
@@ -52,26 +51,25 @@ class CategoryServiceTestCase(TestCase):
         self.assertEqual(category.description, category_data['description'])
 
     def test_partial_update_instance_name_by_CategoryService_is_success(self):
-        category_data = tests_datas.get_category_data(
-            name='Test partial upadate name category',
-        )
-        category = CategoryService.update_instance(
+        category_data = {}
+        category_data['name'] = 'Test partial update description'
+
+        category = CategoryService.partial_update_instance(
             instance_id=self.category.id, **category_data)
         self.assertEqual(category.name, category_data['name'])
 
     def test_partial_update_instance_slug_by_CategoryService_is_success(self):
-        category_data = tests_datas.get_category_data(
-            slug="Test partial update slug category",
-        )
-        category = CategoryService.update_instance(
+        category_data = {}
+        category_data['slug'] = 'Test partial update description'
+
+        category = CategoryService.partial_update_instance(
             instance_id=self.category.id, **category_data)
         self.assertEqual(category.slug, category_data['slug'])
 
     def test_partial_update_instance_description_by_CategoryService_is_success(self):
-        category_data = tests_datas.get_category_data(
-            description='Test partial update description'
-        )
-        category = CategoryService.update_instance(
+        category_data = {}
+        category_data['description'] = 'Test partial update description'
+        category = CategoryService.partial_update_instance(
             instance_id=self.category.id, **category_data)
         self.assertEqual(category.description, category_data['description'])
 
@@ -87,8 +85,9 @@ class CategoryServiceTestCase(TestCase):
         self.assertEqual(cm.exception.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_update_instance_by_id_by_CategoryService_raise_CustomApiException(self):
+        category_data = tests_datas.get_category_data()
         with self.assertRaises(CustomApiException) as cm:
-            CategoryService.update_instance(instance_id=0)
+            CategoryService.update_instance(instance_id=0, **category_data)
         self.assertEqual(cm.exception.detail, {'error': 'category not found'})
         self.assertEqual(cm.exception.status_code, status.HTTP_404_NOT_FOUND)
 

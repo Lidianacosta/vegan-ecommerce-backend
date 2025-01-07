@@ -18,7 +18,7 @@ class CategoryRepositoryTestCase(TestCase):
     def test_create_instance_by_CategoryRepository_is_success(self):
         category_instance = CategoryRepository.create_instance(
             tests_datas.get_category_data(name='Test create category',
-                                          slug='Test create category')
+                                          description='Test create category')
         )
         self.assertIsInstance(category_instance, Category)
 
@@ -34,7 +34,6 @@ class CategoryRepositoryTestCase(TestCase):
     def test_update_instance_by_CategoryRepository_is_success(self):
         category_data = tests_datas.get_category_data(
             name='Test update name category',
-            slug='Test update slug category',
             description='Test update description'
         )
         category = CategoryRepository.update_instance(

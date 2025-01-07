@@ -1,7 +1,10 @@
+from django.template.defaultfilters import slugify
+
+from rest_framework import status
+
 from apps.shared.base_service import BaseService
 from apps.shared.custom_api_exception import CustomApiException
 from apps.category.repository import CategoryRepository
-from rest_framework import status
 
 
 class CategoryService(BaseService):
@@ -17,6 +20,7 @@ class CategoryService(BaseService):
     @staticmethod
     def create_instance(**validated_data):
         try:
+            validated_data['slug'] = slugify(validated_data['name'])
             return CategoryRepository.create_instance(data=validated_data)
         except Exception as e:
             raise CustomApiException(detail=str(
@@ -35,6 +39,7 @@ class CategoryService(BaseService):
     @staticmethod
     def update_instance(instance_id, **validated_data):
         try:
+            validated_data['slug'] = slugify(validated_data['name'])
             return CategoryRepository.update_instance(instance_id=instance_id, data=validated_data)
         except CustomApiException:
             raise
@@ -45,6 +50,8 @@ class CategoryService(BaseService):
     @staticmethod
     def partial_update_instance(instance_id, **validated_data):
         try:
+            if 'name' in validated_data:
+                validated_data['slug'] = slugify(validated_data['name'])
             return CategoryRepository.update_instance(instance_id=instance_id, data=validated_data)
         except CustomApiException:
             raise

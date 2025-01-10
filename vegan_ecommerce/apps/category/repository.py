@@ -1,7 +1,10 @@
-from apps.shared.base_repository import BaseRepository
-from apps.category.models import Category
-from apps.shared.custom_api_exception import CustomApiException
+from django.core.exceptions import ValidationError
+
 from rest_framework import status
+
+from apps.category.models import Category
+from apps.shared.base_repository import BaseRepository
+from apps.shared.custom_api_exception import CustomApiException
 
 
 class CategoryRepository(BaseRepository):
@@ -23,6 +26,9 @@ class CategoryRepository(BaseRepository):
                 detail='category not found',
                 status_code=status.HTTP_404_NOT_FOUND
             )
+        except ValidationError as e:
+            raise CustomApiException(
+                detail=str(e), status_code=status.HTTP_400_BAD_REQUEST) from e
 
     @staticmethod
     def update_instance(instance_id, data):
@@ -37,6 +43,9 @@ class CategoryRepository(BaseRepository):
                 detail='category not found',
                 status_code=status.HTTP_404_NOT_FOUND
             )
+        except ValidationError as e:
+            raise CustomApiException(
+                detail=str(e), status_code=status.HTTP_400_BAD_REQUEST) from e
 
     @staticmethod
     def delete_instance(instance_id):
@@ -48,3 +57,6 @@ class CategoryRepository(BaseRepository):
                 detail='category not found',
                 status_code=status.HTTP_404_NOT_FOUND
             )
+        except ValidationError as e:
+            raise CustomApiException(
+                detail=str(e), status_code=status.HTTP_400_BAD_REQUEST) from e

@@ -1,9 +1,13 @@
+import uuid
+
 from django.test import TestCase
+
+from rest_framework import status
+
 from apps.category.service import CategoryService
 from apps.category.models import Category
 from apps.shared.apps_tests_datas import tests_datas
 from apps.shared.custom_api_exception import CustomApiException
-from rest_framework import status
 
 
 class CategoryServiceTestCase(TestCase):
@@ -78,27 +82,62 @@ class CategoryServiceTestCase(TestCase):
         with self.assertRaises(Category.DoesNotExist):
             Category.objects.get(id=self.category.id)
 
-    def test_retrieve_instance_by_id_by_CategoryService_raise_CustomApiException(self):
+    def test_retrieve_instance_by_id_by_CategoryService_raise_CustomApiException_with_not_found(self):
         with self.assertRaises(CustomApiException) as cm:
-            CategoryService.retrieve_instance(instance_id=0)
+            CategoryService.retrieve_instance(instance_id=uuid.uuid4())
         self.assertEqual(cm.exception.detail, {'error': 'category not found'})
         self.assertEqual(cm.exception.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_update_instance_by_id_by_CategoryService_raise_CustomApiException(self):
+    def test_update_instance_by_id_by_CategoryService_raise_CustomApiException_with_not_found(self):
         category_data = tests_datas.get_category_data()
         with self.assertRaises(CustomApiException) as cm:
-            CategoryService.update_instance(instance_id=0, **category_data)
+            CategoryService.update_instance(
+                instance_id=uuid.uuid4(), **category_data)
         self.assertEqual(cm.exception.detail, {'error': 'category not found'})
         self.assertEqual(cm.exception.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_partial_update_instance_by_id_by_CategoryService_raise_CustomApiException(self):
+    def test_partial_update_instance_by_id_by_CategoryService_raise_CustomApiException_with_not_found(self):
         with self.assertRaises(CustomApiException) as cm:
-            CategoryService.partial_update_instance(instance_id=0)
+            CategoryService.partial_update_instance(instance_id=uuid.uuid4())
         self.assertEqual(cm.exception.detail, {'error': 'category not found'})
         self.assertEqual(cm.exception.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_destroy_instance_by_id_by_CategoryService_raise_CustomApiException(self):
+    def test_destroy_instance_by_id_by_CategoryService_raise_CustomApiException_with_not_found(self):
         with self.assertRaises(CustomApiException) as cm:
-            CategoryService.destroy_instance(instance_id=0)
+            CategoryService.destroy_instance(instance_id=uuid.uuid4())
         self.assertEqual(cm.exception.detail, {'error': 'category not found'})
         self.assertEqual(cm.exception.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_retrieve_instance_by_id_by_CategoryService_raise_CustomApiException_with_bad_request(self):
+        invalid_id = -1
+        detail_error_message = f"['“{invalid_id}” is not a valid UUID.']"
+        with self.assertRaises(CustomApiException) as cm:
+            CategoryService.retrieve_instance(instance_id=invalid_id)
+        self.assertEqual(cm.exception.detail, {'error': detail_error_message})
+        self.assertEqual(cm.exception.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_update_instance_by_id_by_CategoryService_raise_CustomApiException_with_bad_request(self):
+        invalid_id = -1
+        detail_error_message = f"['“{invalid_id}” is not a valid UUID.']"
+        category_data = tests_datas.get_category_data()
+        with self.assertRaises(CustomApiException) as cm:
+            CategoryService.update_instance(
+                instance_id=invalid_id, **category_data)
+        self.assertEqual(cm.exception.detail, {'error': detail_error_message})
+        self.assertEqual(cm.exception.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_partial_update_instance_by_id_by_CategoryService_raise_CustomApiException_with_bad_request(self):
+        invalid_id = -1
+        detail_error_message = f"['“{invalid_id}” is not a valid UUID.']"
+        with self.assertRaises(CustomApiException) as cm:
+            CategoryService.partial_update_instance(instance_id=invalid_id)
+        self.assertEqual(cm.exception.detail, {'error': detail_error_message})
+        self.assertEqual(cm.exception.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_destroy_instance_by_id_by_CategoryService_raise_CustomApiException_with_bad_request(self):
+        invalid_id = -1
+        detail_error_message = f"['“{invalid_id}” is not a valid UUID.']"
+        with self.assertRaises(CustomApiException) as cm:
+            CategoryService.destroy_instance(instance_id=invalid_id)
+        self.assertEqual(cm.exception.detail, {'error': detail_error_message})
+        self.assertEqual(cm.exception.status_code, status.HTTP_400_BAD_REQUEST)

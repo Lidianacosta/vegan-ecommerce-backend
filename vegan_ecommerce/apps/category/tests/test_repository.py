@@ -1,3 +1,5 @@
+import uuid
+
 from django.test import TestCase
 
 from rest_framework import status
@@ -47,20 +49,45 @@ class CategoryRepositoryTestCase(TestCase):
         with self.assertRaises(Category.DoesNotExist):
             Category.objects.get(id=self.category.id)
 
-    def test_get_instance_by_id_by_CategoryRepository_raise_CustomApiException(self):
+    def test_get_instance_by_id_by_CategoryRepository_raise_CustomApiException_with_NOT_FOUND(self):
         with self.assertRaises(CustomApiException) as cm:
-            CategoryRepository.get_instance_by_id(instance_id=0)
+            CategoryRepository.get_instance_by_id(instance_id=uuid.uuid4())
         self.assertEqual(cm.exception.detail, {'error': 'category not found'})
         self.assertEqual(cm.exception.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_update_instance_by_CategoryRepository_raise_CustomApiException(self):
+    def test_get_instance_by_id_by_CategoryRepository_raise_CustomApiException_with_BAD_REQUEST(self):
+        invalid_id = -1
+        detail_error_message = f"['“{invalid_id}” is not a valid UUID.']"
         with self.assertRaises(CustomApiException) as cm:
-            CategoryRepository.update_instance(instance_id=0, data={})
+            CategoryRepository.get_instance_by_id(instance_id=invalid_id)
+        self.assertEqual(cm.exception.detail, {'error': detail_error_message})
+        self.assertEqual(cm.exception.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_update_instance_by_CategoryRepository_raise_CustomApiException_with_NOT_FOUND(self):
+        with self.assertRaises(CustomApiException) as cm:
+            CategoryRepository.update_instance(
+                instance_id=uuid.uuid4(), data={})
         self.assertEqual(cm.exception.detail, {'error': 'category not found'})
         self.assertEqual(cm.exception.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_delete_instance_by_CategoryRepository_raise_CustomApiException(self):
+    def test_update_by_id_by_CategoryRepository_raise_CustomApiException_with_BAD_REQUEST(self):
+        invalid_id = -1
+        detail_error_message = f"['“{invalid_id}” is not a valid UUID.']"
         with self.assertRaises(CustomApiException) as cm:
-            CategoryRepository.delete_instance(instance_id=0)
+            CategoryRepository.update_instance(instance_id=invalid_id, data={})
+        self.assertEqual(cm.exception.detail, {'error': detail_error_message})
+        self.assertEqual(cm.exception.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_delete_instance_by_CategoryRepository_raise_CustomApiException_with_NOT_FOUND(self):
+        with self.assertRaises(CustomApiException) as cm:
+            CategoryRepository.delete_instance(instance_id=uuid.uuid4())
         self.assertEqual(cm.exception.detail, {'error': 'category not found'})
         self.assertEqual(cm.exception.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_by_id_by_CategoryRepository_raise_CustomApiException_with_BAD_REQUEST(self):
+        invalid_id = -1
+        detail_error_message = f"['“{invalid_id}” is not a valid UUID.']"
+        with self.assertRaises(CustomApiException) as cm:
+            CategoryRepository.delete_instance(instance_id=invalid_id)
+        self.assertEqual(cm.exception.detail, {'error': detail_error_message})
+        self.assertEqual(cm.exception.status_code, status.HTTP_400_BAD_REQUEST)

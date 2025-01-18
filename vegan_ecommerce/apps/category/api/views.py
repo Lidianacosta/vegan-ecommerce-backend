@@ -19,56 +19,10 @@ class CategoryViewSet(viewsets.ViewSet):
         except CustomApiException as e:
             return Response(data=e.detail, status=e.status_code)
 
-    def create(self, request):
-        try:
-            serializer = CategorySerializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            category = CategoryService.create_instance(
-                **serializer.validated_data)
-            serializer = CategorySerializer(instance=category)
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-        except CustomApiException as e:
-            return Response(data=e.detail, status=e.status_code)
-        except ValidationError as e:
-            return Response(data={'error': e.detail}, status=e.status_code)
-
     def retrieve(self, request, pk=None):
         try:
             category = CategoryService.retrieve_instance(instance_id=pk)
             serializer = CategorySerializer(instance=category)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
-        except CustomApiException as e:
-            return Response(data=e.detail, status=e.status_code)
-
-    def update(self, request, pk=None):
-        try:
-            serializer = CategorySerializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            category = CategoryService.update_instance(
-                instance_id=pk, **serializer.validated_data)
-            serializer = CategorySerializer(instance=category)
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
-        except CustomApiException as e:
-            return Response(data=e.detail, status=e.status_code)
-        except ValidationError as e:
-            return Response(data={'error': e.detail}, status=e.status_code)
-
-    def partial_update(self, request, pk=None):
-        try:
-            serializer = CategorySerializer(data=request.data, partial=True)
-            serializer.is_valid(raise_exception=True)
-            category = CategoryService.partial_update_instance(
-                instance_id=pk, **serializer.validated_data)
-            serializer = CategorySerializer(instance=category)
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
-        except CustomApiException as e:
-            return Response(data=e.detail, status=e.status_code)
-        except ValidationError as e:
-            return Response(data={'error': e.detail}, status=e.status_code)
-
-    def destroy(self, request, pk):
-        try:
-            CategoryService.destroy_instance(instance_id=pk)
-            return Response(status=status.HTTP_204_NO_CONTENT)
         except CustomApiException as e:
             return Response(data=e.detail, status=e.status_code)

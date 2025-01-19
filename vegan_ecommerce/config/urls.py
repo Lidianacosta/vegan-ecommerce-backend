@@ -18,8 +18,8 @@ urlpatterns = [
          SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
     # ------------------------------------------------------------------------
     # API
-    path('api/', include("config.api_router"))
+    path('api/', include("config.api_router")),
     # ------------------------------------------------------------------------
     # APPS
-    # ...
+    path('bytea-image/', include("apps.bytea_image.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

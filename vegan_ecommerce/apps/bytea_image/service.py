@@ -1,7 +1,5 @@
 from django.http import Http404
 
-from rest_framework import status
-
 from apps.shared.custom_api_exception import CustomApiException
 from apps.bytea_image.repository import ByteaImageRepository
 from apps.bytea_image.models import ByteaImage
@@ -30,13 +28,8 @@ class ByteaImageService:
         return obj
 
     @staticmethod
-    def get_image_url_by_id(instance_id):
-        try:
-            return ByteaImageRepository.get_instance_by_id(instance_id=instance_id)
-        except CustomApiException:
-            raise
-        except Exception as e:
-            raise CustomApiException(
-                detail=str(e),
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
-            ) from e
+    def get_image_url(image):
+        image_url = ''
+        if image:
+            image_url = image.get_absolute_url()
+        return image_url
